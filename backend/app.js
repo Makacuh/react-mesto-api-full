@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
@@ -5,6 +6,7 @@ const rateLimit = require('express-rate-limit');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
+const cors = require('cors');
 const signup = require('./routes/signup');
 const signin = require('./routes/signin');
 const auth = require('./middlewares/auth');
@@ -15,23 +17,54 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000, BASE_PATH } = process.env;
 
+const corsIssue = {
+  origin: 'https://volodka.nomoredomains.sbs',
+  credentials: true,
+};
+
 const app = express();
+app.use(cors(corsIssue));
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
 });
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
+
 app.use(requestLogger);
 app.use(limiter);
 app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(cors());
 
 app.use('/signup', signup);
 app.use('/signin', signin);
 
 app.use(auth);
+
+app.get('/signout', (req, res, next) => {
+  try {
+    res
+      .clearCookie('jwt', {
+        sameSite: 'None',
+        secure: 'False',
+      })
+      .header({
+        'Cross-Origin-Resource-Policy': 'cross-origin',
+      })
+      .send({ message: 'Выход успешный' });
+  } catch (err) {
+    next(err);
+  }
+  return next();
+});
 
 app.use('/users', users);
 app.use('/cards', cards);

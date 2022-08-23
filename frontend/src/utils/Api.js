@@ -71,10 +71,10 @@ class Api {
 }
 
 const api = new Api({
-  url: "https://mesto.nomoreparties.co/v1/cohort-41",
+  url: "https://api.volodka.nomoredomains.sbs",
   headers: {
-    authorization: "e947860b-2631-45df-8b33-3824316a4dc7",
     "Content-Type": "application/json",
+    'Cross-Origin-Resource-Policy': 'cross-origin',
   },
 });
 
