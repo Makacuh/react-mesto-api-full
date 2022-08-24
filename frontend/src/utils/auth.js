@@ -1,4 +1,4 @@
-const BASE_URL = "https://api.volodka.nomoredomains.sbs";
+const BASE_URL = "https://api.volodka.nomoredomains.sbs.nomoredomains.sbs";
 
 function _checkResponse(res) {
   if (res.ok) {
