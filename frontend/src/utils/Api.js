@@ -37,6 +37,8 @@ class Api {
 
   getUserInfo() {
     return fetch(`${this._url}/users/me`, {
+      method: 'GET',
+      credentials: 'include',
       headers: this._headers,
     }).then(this._parseResponse);
   }
@@ -44,6 +46,7 @@ class Api {
   editUserInfo(name, about) {
     return fetch(`${this._url}/users/me`, {
       method: "PATCH",
+      credentials: 'include',
       headers: this._headers,
       body: JSON.stringify({
         name: name,
@@ -55,6 +58,7 @@ class Api {
   editAvatar(url) {
     return fetch(`${this._url}/users/me/avatar`, {
       method: "PATCH",
+      credentials: 'include',
       headers: this._headers,
       body: JSON.stringify({
         avatar: url,
@@ -71,10 +75,11 @@ class Api {
 }
 
 const api = new Api({
-  url: "https://api.volodka.nomoredomains.sbs.nomoredomains.sbs",
+  url: "https://api.volodka.nomoredomains.sbs",
   headers: {
     "Content-Type": "application/json",
     'Cross-Origin-Resource-Policy': 'cross-origin',
+    'Acces-Control-Allow-Credentials': 'true',
   },
 });
 

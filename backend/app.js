@@ -18,7 +18,7 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { PORT = 3000, BASE_PATH } = process.env;
 
 const corsIssue = {
-  origin: 'https://volodka.nomoredomains.sbs',
+  origin: ['https://volodka.nomoredomains.sbs', 'http://volodka.nomoredomains.sbs', 'https://www.volodka.nomoredomains.sbs', 'http://www.volodka.nomoredomains.sbs'],
   credentials: true,
 };
 
@@ -54,10 +54,11 @@ app.get('/signout', (req, res, next) => {
     res
       .clearCookie('jwt', {
         sameSite: 'None',
-        secure: 'False',
+        secure: 'True',
       })
       .header({
         'Cross-Origin-Resource-Policy': 'cross-origin',
+        'Acces-Control-Allow-Credentials': 'true',
       })
       .send({ message: 'Выход успешный' });
   } catch (err) {
