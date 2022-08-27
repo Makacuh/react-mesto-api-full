@@ -18,7 +18,7 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { PORT = 3000, BASE_PATH } = process.env;
 
 const corsIssue = {
-  origin: ['https://makacuh.nomoredomains.sbs', 'http://makacuh.nomoredomains.sbs', 'https://www.volodka.nomoredomains.sbs', 'http://www.volodka.nomoredomains.sbs'],
+  origin: ['https://makacuh.nomoredomains.sbs', 'http://makacuh.nomoredomains.sbs', 'https://www.makacuh.nomoredomains.sbs', 'http://www.makacuh.nomoredomains.sbs'],
   credentials: true,
 };
 
