@@ -75,7 +75,7 @@ class Api {
 }
 
 const api = new Api({
-  url: "http://api.volodka.nomoredomains.sbs",
+  url: "https://api.makacuh.nomoredomains.sbs",
   headers: {
     "Content-Type": "application/json",
     'Cross-Origin-Resource-Policy': 'cross-origin',
