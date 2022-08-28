@@ -4,16 +4,21 @@ class Api {
     this._headers = options.headers;
   }
 
+  _getAuthHeader() {
+    const jwt = localStorage.getItem('jwt');
+    return jwt ? { Authorization: `Bearer ${jwt}` } : {};
+  }
+
   getInitialCards() {
     return fetch(`${this._url}/cards`, {
-      headers: this._headers,
+      headers: { ...this._headers, ...this._getAuthHeader() },
     }).then(this._parseResponse);
   }
 
   addCard(prename, url) {
     return fetch(`${this._url}/cards`, {
       method: "POST",
-      headers: this._headers,
+      headers: { ...this._headers, ...this._getAuthHeader() },
       body: JSON.stringify({
         name: prename,
         link: url,
@@ -24,30 +29,30 @@ class Api {
   deleteElement(cardId) {
     return fetch(`${this._url}/cards/${cardId}`, {
       method: "DELETE",
-      headers: this._headers,
+      headers: { ...this._headers, ...this._getAuthHeader() },
     }).then(this._parseResponse);
   }
 
   toggleLike(id, methodApi) {
     return fetch(`${this._url}/cards/${id}/likes`, {
       method: methodApi,
-      headers: this._headers,
+      headers: { ...this._headers, ...this._getAuthHeader() },
     }).then(this._parseResponse);
   }
 
   getUserInfo() {
     return fetch(`${this._url}/users/me`, {
       method: 'GET',
-      credentials: 'include',
-      headers: this._headers,
+      
+      headers: { ...this._headers, ...this._getAuthHeader() },
     }).then(this._parseResponse);
   }
 
   editUserInfo(name, about) {
     return fetch(`${this._url}/users/me`, {
       method: "PATCH",
-      credentials: 'include',
-      headers: this._headers,
+      
+      headers: { ...this._headers, ...this._getAuthHeader() },
       body: JSON.stringify({
         name: name,
         about: about,
@@ -58,8 +63,8 @@ class Api {
   editAvatar(url) {
     return fetch(`${this._url}/users/me/avatar`, {
       method: "PATCH",
-      credentials: 'include',
-      headers: this._headers,
+     
+      headers: { ...this._headers, ...this._getAuthHeader() },
       body: JSON.stringify({
         avatar: url,
       }),
@@ -77,9 +82,7 @@ class Api {
 const api = new Api({
   url: "https://api.makacuh.nomoredomains.sbs",
   headers: {
-    "Content-Type": "application/json",
-    'Cross-Origin-Resource-Policy': 'cross-origin',
-    'Acces-Control-Allow-Credentials': 'true',
+    'Content-Type': 'application/json',
   },
 });
 

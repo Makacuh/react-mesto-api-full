@@ -59,7 +59,7 @@ export default function App() {
   }
 
   useEffect(() => {
-    handleTokenCheck();
+    
     if(loggedIn) {
     api
       .getUserInfo()
@@ -80,6 +80,10 @@ export default function App() {
       });
     }
   }, [loggedIn]);
+
+  useEffect(() => {
+    handleTokenCheck();
+  }, []);
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(!isEditAvatarPopupOpen);
@@ -202,8 +206,8 @@ export default function App() {
 const handleTokenCheck = () => {
   const jwt = localStorage.getItem('jwt');
   if (!jwt) {
-    return;
-  }
+    
+  
   auth
     .tokenCheck(jwt)
     .then((data) => {
@@ -212,6 +216,7 @@ const handleTokenCheck = () => {
       navigate('/');
     })
     .catch((err) => console.log(err));
+  }
 };
 
   const handleSigninSubmit = (email, password) => {
