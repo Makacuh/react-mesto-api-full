@@ -17,13 +17,7 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000, BASE_PATH } = process.env;
 
-const corsIssue = {
-  origin: ['https://makacuh.nomoredomains.sbs', 'http://localhost:3000', 'http://makacuh.nomoredomains.sbs', 'https://www.makacuh.nomoredomains.sbs', 'http://www.makacuh.nomoredomains.sbs'],
-  credentials: true,
-};
-
 const app = express();
-app.use(cors(corsIssue));
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
