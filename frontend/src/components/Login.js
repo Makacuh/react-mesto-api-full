@@ -9,7 +9,7 @@ function Login(props) {
   };
 
   React.useEffect(() => {
-    handlePathChange("/sign-in");
+    handlePathChange("/signin");
   }, []);
 
   const handleEmailChange = (e) => {

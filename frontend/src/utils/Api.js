@@ -80,7 +80,7 @@ class Api {
 }
 
 const api = new Api({
-  url: "https://api.makacuh.nomoredomains.sbs",
+url: "https://api.makacuh.nomoredomains.sbs",
   headers: {
     'Content-Type': 'application/json',
   },

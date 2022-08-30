@@ -45,7 +45,7 @@ const Register = ({ onRegister }) => {
       </div>
       <p className="form__caption">
         Уже зарегистрированы?&nbsp;
-        <Link className="form__link" to="/sign-in">
+        <Link className="form__link" to="/signin">
              Войти
         </Link>
       </p>

@@ -31,6 +31,29 @@ export default function App() {
   const navigate = useNavigate();
   const [isInfoTooltipOpen, setInfoTooltipOpen] = useState({ opened: false, success: false });
 
+  useEffect(() => {
+    
+    if(loggedIn) {
+    api
+      .getUserInfo()
+      .then((data) => {
+        setCurrentUser(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    api
+      .getInitialCards()
+
+      .then((cards) => {
+        setCards(cards);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    }
+  }, [loggedIn]);
+
   function handleUpdateUser({ name, about }) {
     api
       .editUserInfo(name, about)
@@ -59,31 +82,16 @@ export default function App() {
   }
 
   useEffect(() => {
-    
-    if(loggedIn) {
-    api
-      .getUserInfo()
-      .then((data) => {
-        setCurrentUser(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    api
-      .getInitialCards()
-
-      .then((cards) => {
-        setCards(cards);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-    }
-  }, [loggedIn]);
-
-  useEffect(() => {
     handleTokenCheck();
   }, []);
+
+  function closeAllPopups() {
+    setIsEditAvatarPopupOpen(false);
+    setIsEditProfilePopupOpen(false);
+    setIsAddPlacePopupOpen(false);
+    setSelectedCard(null);
+    setInfoTooltipOpen({ opened: false, success: false})
+  }
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(!isEditAvatarPopupOpen);
@@ -102,17 +110,27 @@ export default function App() {
     setSelectedCard(card);
   }
 
-  function closeAllPopups() {
-    setIsEditAvatarPopupOpen(false);
-    setIsEditProfilePopupOpen(false);
-    setIsAddPlacePopupOpen(false);
-    setSelectedCard(null);
-    setInfoTooltipOpen({ opened: false, success: false})
-  }
+  const handleTokenCheck = () => {
+    const jwt = localStorage.getItem('jwt');
+    if (!jwt) {
+      
+    
+    auth
+      .tokenCheck(jwt)
+      .then((data) => {
+        if(data){
+        setUserEmail(data.email);
+        setLoggedIn(true);
+        navigate('/');
+        }
+      })
+      .catch((err) => console.log(err));
+    }
+  };
+  
 
   function handleCardLike(card) {
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
-
+    const isLiked = card.likes.some((i) => i === currentUser._id);
     api
       .toggleLike(card._id, isLiked ? "DELETE" : "PUT")
       .then((newCard) => {
@@ -159,7 +177,7 @@ export default function App() {
       .tokenCheck(localStorage.getItem("jwt"))
       .then((result) => {
         if (result) {
-          setUserEmail(result.data.email);
+          setUserEmail(result.email);
           setLoggedIn(true);
           navigate("/");
           setCurrentPath("/");
@@ -171,53 +189,34 @@ export default function App() {
       })
       .catch((err) => {
         console.log(`Ошибка входа по токену ${err}`);
-        navigate("/sign-in");
+        navigate("/signin");
       });
   }, []);
 
+  
+
   const handleLogout = () => {
     localStorage.removeItem("jwt");
-    setUserEmail("");
     setLoggedIn(false);
-    navigate("/sign-in");
-    setCurrentPath("/sign-in");
   };
 
   const handleSignupSubmit = (email, password) => {
     auth.register (email, password)
-    .then(result => {
-      if (result) {
+    .then((result) => {
+      
         setUserEmail(result.data.email);
         setInfoTooltipOpen({ opened: true, success: true })
         setLoggedIn(true);
-        navigate('/sign-in');
-        setCurrentPath('/sign-in');
-      }
-      else {
-        throw new Error('Не удалось пройти регистрацию');
-      }
-    })
+        navigate('/signin');
+        setCurrentPath('/signin');
+      })
     .catch( err => {
     console.log(`Ошибка регистрации ${err}`);
     setInfoTooltipOpen({ opened: true, success: false })
   })
 }
 
-const handleTokenCheck = () => {
-  const jwt = localStorage.getItem('jwt');
-  if (!jwt) {
-    
-  
-  auth
-    .tokenCheck(jwt)
-    .then((data) => {
-      setUserEmail(data.data.email);
-      setLoggedIn(true);
-      navigate('/');
-    })
-    .catch((err) => console.log(err));
-  }
-};
+
 
   const handleSigninSubmit = (email, password) => {
     auth
@@ -225,13 +224,12 @@ const handleTokenCheck = () => {
       .then((data) => {
         if (data.token) {
           localStorage.setItem("jwt", data.token);
+        }
           setUserEmail(email);
           setLoggedIn(true);
           navigate("/");
           setCurrentPath("/");
-        } else {
-          throw new Error("Не удалось получить токен от сервера");
-        }
+        
       })
       .catch((err) => {
         setInfoTooltipOpen({ opened: true, success: false });
@@ -250,7 +248,7 @@ const handleTokenCheck = () => {
 
       <Routes>
         <Route
-          path="/sign-in"
+          path="/signin"
           element={
             <Login
               onSignin={handleSigninSubmit}
@@ -259,7 +257,7 @@ const handleTokenCheck = () => {
           }
         />
         <Route
-          path="/sign-up"
+          path="/signup"
           element={<Register onRegister={handleSignupSubmit} />}
         />
 

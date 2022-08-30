@@ -4,11 +4,11 @@ import { Link,Route, Routes } from "react-router-dom";
 
 function Header(props) {
   const newPath =
-    props.path === "/" || props.path === "/sign-up" ? "/sign-in" : "/sign-up";
+    props.path === "/" || props.path === "/signup" ? "/signin" : "/signup";
   const linkName = {
     "/": "Выйти",
-    "/sign-up": "Войти",
-    "/sign-in": "Регистрация",
+    "/signup": "Войти",
+    "/signin": "Регистрация",
   };
   const handleLogout = () => {
     props.onLogout();
