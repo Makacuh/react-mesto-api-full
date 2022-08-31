@@ -34,7 +34,7 @@ function Header(props) {
     </div>
   }
 />
-<Route path="/sign-in"
+<Route path="/signin"
 element ={
   <div className="header__menu">
       <a className="header__link header__link_mail">{props.userEmail}</a>
