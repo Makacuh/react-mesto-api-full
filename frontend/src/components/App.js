@@ -204,7 +204,7 @@ export default function App() {
     auth.register (email, password)
     .then((result) => {
       
-        setUserEmail(result.data.email);
+        setUserEmail(result.email);
         setInfoTooltipOpen({ opened: true, success: true })
         setLoggedIn(true);
         navigate('/signin');
