@@ -11,6 +11,7 @@ class Api {
 
   getInitialCards() {
     return fetch(`${this._url}/cards`, {
+      method: 'GET',
       headers: { ...this._headers, ...this._getAuthHeader() },
     }).then(this._parseResponse);
   }
@@ -48,7 +49,7 @@ class Api {
     }).then(this._parseResponse);
   }
 
-  editUserInfo(name, about) {
+  editUserInfo(name,about) {
     return fetch(`${this._url}/users/me`, {
       method: "PATCH",
       

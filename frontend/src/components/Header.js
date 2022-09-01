@@ -37,7 +37,7 @@ function Header(props) {
 <Route path="/signin"
 element ={
   <div className="header__menu">
-      <a className="header__link header__link_mail">{props.userEmail}</a>
+      <a className="header__link header__link_mail"></a>
   <Link className="header__link" to={newPath}> 
 
           {linkName[props.path]} 
