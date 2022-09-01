@@ -29,11 +29,12 @@ app.get('/crash-test', () => {
   }, 0);
 });
 app.use(helmet());
+app.use(requestLogger);
 app.use(limiter);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(requestLogger);
+
 app.use(cors());
 
 app.use('/signin', signin);

@@ -1,5 +1,3 @@
-/* eslint-disable no-debugger */
-/* eslint-disable consistent-return */
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../configuration');
 const AuthorizationError = require('../errors/authorizationError');
@@ -12,12 +10,14 @@ module.exports = (req, res, next) => {
 
   const token = authorization.replace('Bearer ', '');
   let payload;
+
   try {
     payload = jwt.verify(token, JWT_SECRET);
-  } catch (e) {
-    const err = new AuthorizationError('Необходима авторизация!');
-    next(err);
+  } catch (err) {
+    throw new AuthorizationError('Необходима авторизация!');
   }
+
   req.user = payload;
+
   return next();
 };

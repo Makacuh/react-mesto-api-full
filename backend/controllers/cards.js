@@ -16,8 +16,8 @@ const createCard = (req, res, next) => {
 };
 
 const findCards = (req, res, next) => {
-  Card.find({})
-    .then((card) => res.send(card))
+  Card.find({}).sort({ createdAt: -1 })
+    .then((cards) => res.send(cards))
     .catch((err) => {
       customError(err, req, res, next);
     });

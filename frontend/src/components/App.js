@@ -54,6 +54,10 @@ export default function App() {
     }
   }, [loggedIn]);
 
+  useEffect(() => {
+    handleTokenCheck();
+  }, []);
+
   function handleUpdateUser({ name, about }) {
     api
       .editUserInfo(name, about)
@@ -81,9 +85,7 @@ export default function App() {
       });
   }
 
-  useEffect(() => {
-    handleTokenCheck();
-  }, []);
+  
 
   function closeAllPopups() {
     setIsEditAvatarPopupOpen(false);
@@ -193,8 +195,6 @@ export default function App() {
       });
   }, []);
 
-  
-
   const handleLogout = () => {
     localStorage.removeItem("jwt");
     setLoggedIn(false);
@@ -202,21 +202,23 @@ export default function App() {
 
   const handleSignupSubmit = (email, password) => {
     auth.register (email, password)
-    .then((result) => {
-      
+    .then(result => {
+      if (result) {
+        console.log(result)
         setUserEmail(result.email);
         setInfoTooltipOpen({ opened: true, success: true })
-        setLoggedIn(true);
         navigate('/signin');
         setCurrentPath('/signin');
-      })
+      }
+      else {
+        throw new Error('Не удалось пройти регистрацию');
+      }
+    })
     .catch( err => {
     console.log(`Ошибка регистрации ${err}`);
     setInfoTooltipOpen({ opened: true, success: false })
   })
 }
-
-
 
   const handleSigninSubmit = (email, password) => {
     auth
@@ -224,12 +226,12 @@ export default function App() {
       .then((data) => {
         if (data.token) {
           localStorage.setItem("jwt", data.token);
-        }
+        
           setUserEmail(email);
           setLoggedIn(true);
           navigate("/");
           setCurrentPath("/");
-        
+        }
       })
       .catch((err) => {
         setInfoTooltipOpen({ opened: true, success: false });
