@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const { PORT = 3000, JWT_SECRET = '07d4f632cf354c662d6c566528858693a9c5b8603bdb26e26ca9a8bdcafabf64' } = process.env;
+const { PORT = 3000, JWT_SECRET = '1b15f173030bcb73df6e84f48acfdb3cb2dc402941eb30e634aa30fdd8bd5fdd' } = process.env;
 
 const DATABASE_URL = 'mongodb://127.0.0.1:27017/mestodb';
 const JWT_STORAGE_TIME = '7d';

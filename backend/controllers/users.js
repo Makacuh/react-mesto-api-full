@@ -1,10 +1,8 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const { NODE_ENV, SECRET_KEY } = process.env;
+const { JWT_STORAGE_TIME, SALT_LENGTH, JWT_SECRET } = require('../configuration');
 const User = require('../models/user');
-
-const { JWT_STORAGE_TIME, SALT_LENGTH } = require('../configuration');
 
 const { customError } = require('../errors/customErrors');
 const NotFoundError = require('../errors/notFoundError');
@@ -27,7 +25,7 @@ const login = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? SECRET_KEY : 'dev-key', {
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: JWT_STORAGE_TIME,
       });
       res.send({ token });
