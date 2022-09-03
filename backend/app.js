@@ -17,7 +17,6 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { PORT = 3000, BASE_PATH } = process.env;
 
 const app = express();
-
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,

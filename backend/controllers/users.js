@@ -1,7 +1,8 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const { JWT_STORAGE_TIME, SALT_LENGTH, JWT_SECRET } = require('../configuration');
+const { NODE_ENV, SECRET_KEY, HASH_LENGTH = 10 } = process.env;
+
 const User = require('../models/user');
 
 const { customError } = require('../errors/customErrors');
@@ -11,7 +12,7 @@ const createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-  bcrypt.hash(password, SALT_LENGTH).then((hash) => User.create({
+  bcrypt.hash(password, HASH_LENGTH).then((hash) => User.create({
     name, about, avatar, email, password: hash,
   }))
     .then((user) => User.findOne({ _id: user._id }))
@@ -25,9 +26,7 @@ const login = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
-        expiresIn: JWT_STORAGE_TIME,
-      });
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? SECRET_KEY : 'dev-key', { expiresIn: '7d' });
       res.send({ token });
     })
     .catch(next);
